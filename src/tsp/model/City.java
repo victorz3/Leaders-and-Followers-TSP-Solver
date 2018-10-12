@@ -41,7 +41,7 @@ public class City{
 
     /**
      * Returns whether our city is equal to another city.
-     * @param o - The city to be compared to.
+     * @param o The city to be compared to.
      * @return <code>true</code> if the cities are equal and <code>false</code> otherwise.
      */
     @Override
