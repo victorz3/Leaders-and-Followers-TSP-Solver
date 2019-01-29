@@ -2,6 +2,7 @@ package tsp.algorithm;
 
 import tsp.controller.Instance;
 import java.util.Random;
+import java.util.HashMap;
 
 /**
  * This class represents a solution for the TSP problem. 
@@ -117,6 +118,49 @@ public class Solution{
 	    return max * C;
     }
 
+    /**
+     * Creates a solution based on its two parents.
+     * @param s1 The first parent solution.
+     * @param s2 The second parent solution.
+     * @param random Random number generator for the algorithm.
+     * @return A child solution with information from both parents.
+     */
+    public static Solution crossover(Solution s1, Solution s2, Random random){
+	int[] solution1, solution2; // ID arrays from the solutions.
+	solution1 = s1.solution;
+	solution2 = s2.solution;
+	int[] child = new int[solution1]; // The solutions' offspring.
+
+	// First, we're gonna copy a random length interval from s1 into the child.
+	int begin = random.nextInt(solution1.length - 1); // Beginning of the interval.
+	int end = random.nextInt(solution1.length - begin) + begin + 1; // End of the interval.
+
+	HashMap<Integer, Integer> childMap = new HashMap<>(end - begin); // We have to map the copied interval to check in constant time whether an index has been inserted.
+	
+	for(int i = begin; i <= end; ++i){
+	    child[i] = solution1[i];
+	    childMap.put(solution[i], i);
+	}
+
+	int childIndx = 0; // The first index where we have yet to insert an ID.
+	int parentIndx = 0; // ID to be inserted from solution2.
+	for(int i = childIndx; i < begin; ++i){
+	    while(childMap.get(solution2[parentIndx]) == null)
+		parentIndx++;
+	    child[childIndx] = solution2[parentIndx++];
+	}
+
+	childIndx = end + 1;
+	for(int i = childIndx; i < child.length; ++i){
+	    while(childMap.get(solution2[parentIndx]) == null)
+		parentIndx++;
+	    child[childIndx] = solution2[parentIndx++];
+	}
+
+	// Child should be complete here.
+	return new Solution(child);
+    }
+    
     /**
      * Returns this solution's sum of distances.
      * @return The sum of the solution's distances.
