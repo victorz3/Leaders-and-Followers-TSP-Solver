@@ -13,9 +13,11 @@ public class Solution{
     
     private int[] solution; // City id's ordered in an array.
     private double cost; // Cost function value.
-    public static final double C = 2; // Constant value for calculating distance between two non-connected cities.
     private static double max; // Maximum distance between two cities.
     private static double avg; // Average distance.
+    private static Instance instance; // Instance for the algorithm's execution.
+    public static final double C = 2; // Constant value for calculating distance between two non-connected cities.
+
     
     /**
      * Constructor that only recieves an array of ids. 
@@ -62,7 +64,9 @@ public class Solution{
 	double sum = 0.0; // Sum of distances.
 	for(int i = 1; i < solution.length; ++i)
 	    sum += dPrime(solution[i-1], solution[i]);
-	return (sum / (avg*(solution.length-1)));
+	// Update solution's cost.
+	cost = (sum / (avg * (solution.length-1)));
+	return cost;
     }
 
     /** 
@@ -71,7 +75,7 @@ public class Solution{
      */
     public boolean isFeasible(){
 	for(int i = 0; i < solution.length-1; ++i)
-	    if(Instance.getDistance(solution[i], solution[i+1]) == Instance.DEFAULT_DISTANCE)
+	    if(instance.getDistance(solution[i], solution[i+1]) == instance.getDefaultDistance())
 		return false;
 	return true;
     }
@@ -84,8 +88,8 @@ public class Solution{
 	double max = 0; // Maximum distance seen so far.
 	for(int i = 0; i < solution.length; i++)
 	    for(int j = i; j < solution.length; j++)
-		if(Instance.getDistance(solution[i], solution[j]) > max)
-		    max = Instance.getDistance(solution[i], solution[j]);
+		if(instance.getDistance(solution[i], solution[j]) > max)
+		    max = instance.getDistance(solution[i], solution[j]);
 	return max;	
     }
 
@@ -98,11 +102,19 @@ public class Solution{
 	double sum = 0; // Sum of distances.
 	for(int i = 0; i < solution.length; i++)
 	    for(int j = i; j < solution.length; j++)
-		if(Instance.getDistance(solution[i], solution[j]) > 0){
+		if(instance.getDistance(solution[i], solution[j]) > 0){
 		    edges++;
-		    sum += Instance.getDistance(solution[i], solution[j]);
+		    sum += instance.getDistance(solution[i], solution[j]);
 		}
 	return sum/edges;
+    }
+
+    /**
+     * Sets the Instance for the algorithm's execution.
+     * @param i - Instance with values for program execution.
+     */
+    public static void setInstance(Instance i){
+	instance = i;
     }
 
     /** 
@@ -112,8 +124,8 @@ public class Solution{
      * @return The distance between i and j if they're connected or a default value(max * C) otherwise.
      */
     public static double dPrime(int i, int j){
-	if(Instance.getDistance(i, j) > 0)
-	    return Instance.getDistance(i, j);
+	if(instance.getDistance(i, j) > 0)
+	    return instance.getDistance(i, j);
 	else
 	    return max * C;
     }
@@ -129,7 +141,7 @@ public class Solution{
 	int[] solution1, solution2; // ID arrays from the solutions.
 	solution1 = s1.solution;
 	solution2 = s2.solution;
-	int[] child = new int[solution1]; // The solutions' offspring.
+	int[] child = new int[solution1.length]; // The solutions' offspring.
 
 	// First, we're gonna copy a random length interval from s1 into the child.
 	int begin = random.nextInt(solution1.length - 1); // Beginning of the interval.
@@ -139,20 +151,20 @@ public class Solution{
 	
 	for(int i = begin; i <= end; ++i){
 	    child[i] = solution1[i];
-	    childMap.put(solution[i], i);
+	    childMap.put(solution1[i], i);
 	}
 
 	int childIndx = 0; // The first index where we have yet to insert an ID.
 	int parentIndx = 0; // ID to be inserted from solution2.
 	for(int i = childIndx; i < begin; ++i){
-	    while(childMap.get(solution2[parentIndx]) == null)
+	    while(childMap.get(solution2[parentIndx]) != null)
 		parentIndx++;
 	    child[childIndx] = solution2[parentIndx++];
 	}
 
 	childIndx = end + 1;
 	for(int i = childIndx; i < child.length; ++i){
-	    while(childMap.get(solution2[parentIndx]) == null)
+	    while(childMap.get(solution2[parentIndx]) != null)
 		parentIndx++;
 	    child[childIndx] = solution2[parentIndx++];
 	}
@@ -168,7 +180,7 @@ public class Solution{
     public double getSum(){
 	double sum = 0; // Sum of this solution's distances.
 	for(int i = 0; i < solution.length - 1; ++i)
-	    sum += Instance.getDistance(solution[i], solution[i+1]);
+	    sum += instance.getDistance(solution[i], solution[i+1]);
 	return sum;
     }
     

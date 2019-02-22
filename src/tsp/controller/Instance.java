@@ -13,16 +13,32 @@ import java.sql.ResultSet;
  */
 public class Instance{
 
-    public static final City[] cities = fillCityList(); // List of cities.
-    public static final double[][] distances = fillDistances(); // Array of distances between the cities.
-    public static final double DEFAULT_DISTANCE = getDefaultDistance(); // Default distance between two cities.
+    private City[] cities; // List of cities.
+    private double[][] distances; // Array of distances between the cities.
+    private double defaultDistance; // Default distance between two cities.
 
     /**
-     * Initializes this instance's data.
+     * Initializes this instance's data with information of the database.
      */
-    public static void initialize(){
-	// For now, just close the connection since most initialization is done above.
+    public Instance(){
+	// Initialize the dataset.
+	cities = fillCityList();
+	distances = fillDistances();
+	defaultDistance = fillDefaultDistance();
+	
+	// Close the connection once everything is initialized.
 	DBConnection.closeConnection();
+    }
+
+    /**
+     * Initializes the instance's data manually.
+     * @param cities Array of cities.
+     * @param distances Matrix of distances between the cities.
+     */
+    public Instance(City[] cities, double[][] distances){
+	cities = cities;
+	distances = distances;
+	defaultDistance = calculateDefaultDistance();
     }
 
     
@@ -30,23 +46,49 @@ public class Instance{
      * Returns the distance between two cities.
      * @param a The first city's id.
      * @param b The second city's id.
-     * @return Distance between a and b if they're connected or DEFAULT_DISTANCE if they are not connected.
+     * @return Distance between a and b if they're connected or the default distance if they are not connected.
      */
-    public static double getDistance(int a, int b){
+    public double getDistance(int a, int b){
 	if(distances[a][b] > 0)
 	    return distances[a][b];
 	else
-	    return DEFAULT_DISTANCE;
+	    return defaultDistance;
+    }
+    
+    /**
+     * Returns array of cities.
+     * @return The array of cities for this TSP instance.
+     */
+    public City[] getCities(){
+	return cities;
     }
 
+    /**
+     * Returns matrix of distances between cities.
+     * @return Matrix of distances between the cities.
+     */
+    public double[][] getDistances(){
+	return distances;
+    }
+
+    /**
+     * Returns the default distance between two cities that aren't directly connected.
+     * @return Default distance between two cities.
+     */
+    public double getDefaultDistance(){
+	return defaultDistance;
+    }
+    
     // Fills distance array.
-    private static double[][] fillDistances(){
+    private double[][] fillDistances(){
 	DBConnection c = DBConnection.getConnection(); // Connection to the dtabase.
 	ResultSet rs = null;
 	try{ 
 	    int size = cities != null ? cities.length : 0; // This method should not be called if the city array hasn't been initialized,
 	    // but if that's the case, we just set the distance array size to 0.
-	    double[][] distances = new double[size][size]; // Not doing any space optimizations.
+
+	    // For now, assume ID's range from 0 to size.
+	    double[][] distances = new double[size+1][size+1]; // Not doing any space optimizations.
 	    rs = c.query("SELECT * FROM connections"); // Connection table.
 	    while(rs.next()){
 		int index1, index2; // Indices of connected cities.
@@ -64,8 +106,8 @@ public class Instance{
 	return null; // Something went wrong.
     }
 
-    // Calculates the default distance between two cities.
-    private static double getDefaultDistance(){
+    // Gets the default distance by multiplying the database's maximum distance times 2.
+    private double fillDefaultDistance(){
 	DBConnection c = DBConnection.getConnection();
 	double max = 0; // Maximum distance found so far.
 	ResultSet rs = null;
@@ -80,8 +122,18 @@ public class Instance{
     	return max*2;
     }
 
+    // Calculates default distance based on the distance matrix.
+    private double calculateDefaultDistance(){
+	double max = 0.0; // Max distance seen so far.
+	for(int i = 0; i < cities.length - 1; ++i)
+	    for(int j = i+1; j < cities.length; ++j)
+		if(distances[i][j] > max)
+		    max = distances[i][j];
+	return max * 2; 
+    }
+    
     // Returns the size of the city array.
-    private static int getSize(){
+    private int getSize(){
 	DBConnection c = DBConnection.getConnection(); // Connection to the database.
 	int size = -1; // Size of city table.
 	ResultSet count = c.query("SELECT count(*) FROM cities"); // We count the cities.
@@ -96,7 +148,7 @@ public class Instance{
     }
     
     // Fills the list of cities from the database.
-    private static City[] fillCityList(){
+    private City[] fillCityList(){
 	DBConnection c = DBConnection.getConnection(); // Connection to the database.
 	ResultSet rs = null; // Result set with list of cities.
 	City[] list = null; // List of cities.

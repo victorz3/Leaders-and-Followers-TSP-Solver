@@ -21,7 +21,7 @@ public class DBConnection{
     /**
      * Creates the connection to the database. 
      */
-    public DBConnection(){
+    public DBConnection(String dbName){
 	/* Attempt to create the connection... */
 	try{
 	    Class.forName("org.sqlite.JDBC");
