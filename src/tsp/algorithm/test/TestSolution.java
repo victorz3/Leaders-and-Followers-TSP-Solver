@@ -5,6 +5,7 @@ import tsp.model.City;
 import tsp.controller.Instance;
 import org.junit.Test;
 import org.junit.Rule;
+import org.junit.Assert;
 import org.junit.rules.Timeout;
 
 /**
@@ -45,7 +46,7 @@ public class TestSolution{
      * Unit test for {@link Solution#avgP}.
      */
     @Test public void testAvgP(){
-	Assert.assertTrue(s.avgP()==1778054.73);
+	Assert.assertTrue(s1.avgP()==1778054.73);
 	Assert.assertTrue(s2.avgP()== ((774005.28+2723789.75+1988686.23)/3));
     }
 

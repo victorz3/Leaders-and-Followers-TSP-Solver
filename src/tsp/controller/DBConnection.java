@@ -19,13 +19,23 @@ public class DBConnection{
     private static DBConnection currentConnection; // Object currently connected to the database, if it exists. 
     
     /**
-     * Creates the connection to the database. 
+     * Creates the connection to the database.
+     * Uses default database name (tsp.db).
      */
-    public DBConnection(String dbName){
+    public DBConnection(){
+	this("tsp.db");
+    }
+
+
+    /**
+     * Creates a connection to the given database.
+     * @param db The name of the database
+     */
+    public DBConnection(String db){
 	/* Attempt to create the connection... */
 	try{
 	    Class.forName("org.sqlite.JDBC");
-	    c = DriverManager.getConnection("jdbc:sqlite:db/tsp.db"); // Initialize the connection. 
+	    c = DriverManager.getConnection("jdbc:sqlite:db/" + db); // Initialize the connection. 
 	    stmt = c.createStatement();
 	    // Connection successful. 
 	}catch ( Exception e ) {

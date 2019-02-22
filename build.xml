@@ -50,7 +50,7 @@
       <link href="http://docs.oracle.com/javafx/2/api/" />
       <classpath>
         <pathelement location="${lib.dir}/junit.jar" />
-        <pathelement location="${lib.dir}/hamcrest-core.jar" />
+        <pathelement location="${lib.dir}/hamcrest-all.jar" />
 	<pathelement location="${lib.dir}/sqlite-jdbc.jar" />
       </classpath>
     </javadoc>
@@ -74,7 +74,7 @@
       <classpath>
         <pathelement path="${build.dir}" />
         <pathelement location="${lib.dir}/junit.jar" />
-        <pathelement location="${lib.dir}/hamcrest-core.jar" />
+        <pathelement location="${lib.dir}/hamcrest-all.jar" />
 	<pathelement location="${lib.dir}/sqlite-jdbc.jar" />
       </classpath>
       <batchtest fork="yes">
