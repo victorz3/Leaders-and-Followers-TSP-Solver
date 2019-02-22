@@ -36,8 +36,8 @@ public class Instance{
      * @param distances Matrix of distances between the cities.
      */
     public Instance(City[] cities, double[][] distances){
-	cities = cities;
-	distances = distances;
+	this.cities = cities;
+	this.distances = distances;
 	defaultDistance = calculateDefaultDistance();
     }
 
@@ -125,7 +125,7 @@ public class Instance{
     // Calculates default distance based on the distance matrix.
     private double calculateDefaultDistance(){
 	double max = 0.0; // Max distance seen so far.
-	for(int i = 0; i < cities.length - 1; ++i)
+	for(int i = 1; i < cities.length - 1; ++i)
 	    for(int j = i+1; j < cities.length; ++j)
 		if(distances[i][j] > max)
 		    max = distances[i][j];

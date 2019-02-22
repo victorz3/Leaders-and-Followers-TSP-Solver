@@ -31,11 +31,10 @@ public class TestSolution{
 	c2 = new City("Brazil", "Brasilia", 0, 0, 2, 200);
 	c3 = new City("Australia", "Sidney", 0, 0, 3, 200);
 	c4 = new City("China", "Beijing", 0, 0, 4, 200);
-	City[] cities = {c1, c2, c3, c4}; // Store cities inside an array.
+	City[] cities = {null, c1, c2, c3, c4}; // Store cities inside an array.
 	
 	double[][] distances = {{}, {0, 0, -1, 15, -1}, {0, -1, 0, 35, 25}, {0, 15, 35, 0, 30}, {0, -1, 25, 30, 0}}; // Distances between cities.
 	Instance instance = new Instance(cities, distances); // Instance for testing
-
 	int[] sol = {1, 4, 2, 3};
 	this.s1 = new Solution(sol);
 	int[] sol2 = {1, 3, 4, 2};

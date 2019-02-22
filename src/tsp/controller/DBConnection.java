@@ -37,7 +37,7 @@ public class DBConnection{
 	    Class.forName("org.sqlite.JDBC");
 	    c = DriverManager.getConnection("jdbc:sqlite:db/" + db); // Initialize the connection. 
 	    stmt = c.createStatement();
-	    // Connection successful. 
+	    // Connection successful.
 	}catch ( Exception e ) {
 		System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 		System.exit(0);
