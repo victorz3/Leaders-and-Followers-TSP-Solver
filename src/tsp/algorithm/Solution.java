@@ -16,7 +16,7 @@ public class Solution{
     private static double max; // Maximum distance between two cities.
     private static double avg; // Average distance.
     private static Instance instance; // Instance for the algorithm's execution.
-    public static final double C = 2; // Constant value for calculating distance between two non-connected cities.
+    public static double C = 2; // Constant value for calculating distance between two non-connected cities.
 
     
     /**
@@ -86,10 +86,16 @@ public class Solution{
      */
     public double maxP(){
 	double max = 0; // Maximum distance seen so far.
+	double[][] distances = instance.getDistances(); // Distance matrix.
 	for(int i = 0; i < solution.length; i++)
-	    for(int j = i; j < solution.length; j++)
-		if(instance.getDistance(solution[i], solution[j]) > max)
-		    max = instance.getDistance(solution[i], solution[j]);
+	    for(int j = i+1; j < solution.length; j++){
+		int index1, index2; // Indices to look up in distance array.
+		index1 = solution[i];
+		index2 = solution[j];
+		if(distances[index1][index2] > 0){
+		    sum += distances[index1][index2];
+		}
+	    }
 	return max;	
     }
 
@@ -120,6 +126,14 @@ public class Solution{
      */
     public static void setInstance(Instance i){
 	instance = i;
+    }
+
+    /**
+     * Sets the value of C, a constant used in cost calculation.
+     * @param constant The constant that will be the next value for C.
+     */
+    public static void setC(double constant){
+	C = constant;
     }
 
     /** 
