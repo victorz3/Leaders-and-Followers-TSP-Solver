@@ -100,12 +100,17 @@ public class Solution{
     public double avgP(){
 	int edges = 0; // Number of edges to be added.
 	double sum = 0; // Sum of distances.
+	double[][] distances = instance.getDistances(); // Distance matrix.
 	for(int i = 0; i < solution.length; i++)
-	    for(int j = i; j < solution.length; j++)
-		if(instance.getDistance(solution[i], solution[j]) > 0){
+	    for(int j = i+1; j < solution.length; j++){
+		int index1, index2; // Indices to look up in distance array.
+		index1 = solution[i];
+		index2 = solution[j];
+		if(distances[index1][index2] > 0){
 		    edges++;
-		    sum += instance.getDistance(solution[i], solution[j]);
+		    sum += distances[index1][index2];
 		}
+	    }
 	return sum/edges;
     }
 

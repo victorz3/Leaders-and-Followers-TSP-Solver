@@ -35,6 +35,7 @@ public class TestSolution{
 	
 	double[][] distances = {{}, {0, 0, -1, 15, -1}, {0, -1, 0, 35, 25}, {0, 15, 35, 0, 30}, {0, -1, 25, 30, 0}}; // Distances between cities.
 	Instance instance = new Instance(cities, distances); // Instance for testing
+	Solution.setInstance(instance);
 	int[] sol = {1, 4, 2, 3};
 	this.s1 = new Solution(sol);
 	int[] sol2 = {1, 3, 4, 2};
@@ -45,8 +46,8 @@ public class TestSolution{
      * Unit test for {@link Solution#avgP}.
      */
     @Test public void testAvgP(){
-	Assert.assertTrue(s1.avgP()==1778054.73);
-	Assert.assertTrue(s2.avgP()== ((774005.28+2723789.75+1988686.23)/3));
+	Assert.assertTrue(s1.avgP()==26.25);
+	Assert.assertTrue(s2.avgP()==26.25);
     }
 
     
